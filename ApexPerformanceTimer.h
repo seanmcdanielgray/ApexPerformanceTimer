@@ -11,6 +11,7 @@
 #include <string>
 
 using namespace std::chrono;
+using namespace std;
 
 #define PERFORMANCE_PRINTF_FUNC printf
 
@@ -30,9 +31,10 @@ class ApexPerformanceTimer
   const char *m_str;
   const bool m_bShowImmediate;
   duration<double> t_start;
-  //duration<double> t_elapsed;
+  duration<double> t_stop;
+  duration<double> t_elapsed;
 
-  static std::vector<std::tuple<std::string, double, int>> s_data;
+  static std::vector<std::tuple<std::string, duration<double>, int>> s_data;
   static int s_indent;
 };
 

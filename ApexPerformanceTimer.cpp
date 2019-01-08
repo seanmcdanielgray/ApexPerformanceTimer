@@ -3,9 +3,11 @@
 
 #ifdef ENABLE_APEXPERFORMANCETIMER
 
-std::vector<std::tuple<std::string, double, int>> ApexPerformanceTimer::s_data;
+vector<tuple<string, duration<double>, int>> ApexPerformanceTimer::s_data;
 
 int ApexPerformanceTimer::s_indent = 0;
+
+//duration<double> ApexPerformanceTimer::t_elapsed = high_resolution_clock::duration::zero();
 
 ApexPerformanceTimer::ApexPerformanceTimer(const char* strText, bool bShowImmediate) : m_str(strText), m_bShowImmediate(bShowImmediate)
 {
@@ -31,7 +33,7 @@ ApexPerformanceTimer::~ApexPerformanceTimer()
     }
   else
     {
-      std::get<1>(s_data[m_id]) = t_elapsed;
+      get<1>(s_data[m_id]) = t_elapsed;
     }
 
   --s_indent;
@@ -41,9 +43,9 @@ void ApexPerformanceTimer::ReportAll()
 {
   for (const auto &d : s_data)
     {
-      int indents = std::get<2>(d);
+      int indents = get<2>(d);
       while (indents-- > 0) PERFORMANCE_PRINTF_FUNC("  ");
-      PERFORMANCE_PRINTF_FUNC(std::get<0>(d).c_str(), std::get<1>(d));
+      PERFORMANCE_PRINTF_FUNC(get<0>(d).c_str(), get<1>(d));
     }
 }
 
