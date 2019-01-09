@@ -1,9 +1,11 @@
 #ifndef APEXPERFORMANCETIMER_H
 #define APEXPERFORMANCETIMER_H
 
-#define ENABLE_APEXPERFORMANCETIMER
+#define ENABLE_APEXPERFORMANCE
 
-#ifdef ENABLE_APEXPERFORMANCETIMER
+#define APEXPERFORMANCE_SHOWIMMEDIATE false
+
+#ifdef ENABLE_APEXPERFORMANCE
 
 #include <chrono>
 #include <stdio.h>
@@ -30,20 +32,22 @@ class ApexPerformanceTimer
   unsigned m_id;
   const char *m_str;
   const bool m_bShowImmediate;
-  duration<double> t_start;
-  duration<double> t_stop;
+
+  time_point<std::chrono::high_resolution_clock> t_start;
+  time_point<std::chrono::high_resolution_clock> t_stop;
+
   duration<double> t_elapsed;
 
   static std::vector<std::tuple<std::string, duration<double>, int>> s_data;
   static int s_indent;
 };
 
-#define APEXPERFORMANCETIMER_FUNCSTART ApexPerformanceTimer __xperfstart##__COUNTER__(__FUNCTION__" : %f\n")
-#define APEXPERFORMANCETIMER_SCOPED(str) ApexPerformanceTimer __xperfstart##__COUNTER__(str" : %f\n")
-#define APEXPERFORMANCETIMER_START(str) { ApexPerformanceTimer __xperfstart##__COUNTER__(str" : %f\n")
+#define APEXPERFORMANCETIMER_FUNCSTART ApexPerformanceTimer __xperfstart##__COUNTER__(__FUNCTION__" : %f\n", APEXPERFORMANCE_SHOWIMMEDIATE)
+#define APEXPERFORMANCETIMER_SCOPED(str) ApexPerformanceTimer __xperfstart##__COUNTER__(str" : %f\n", APEXPERFORMANCE_SHOWIMMEDIATE)
+#define APEXPERFORMANCETIMER_START(str) { ApexPerformanceTimer __xperfstart##__COUNTER__(str" : %f\n", APEXPERFORMANCE_SHOWIMMEDIATE)
 #define APEXPERFORMANCETIMER_END }
-#define APEXPERFORMANCETIMER_REPORTALL SimplePerfTimer::ReportAll
-#define APEXPERFORMANCETIMER_REPORTALL_ATEXIT atexit(SimplePerfTimer::ReportAll);
+#define APEXPERFORMANCETIMER_REPORTALL ApexPerformanceTimer::ReportAll
+#define APEXPERFORMANCETIMER_REPORTALL_ATEXIT atexit(ApexPerformanceTimer::ReportAll);
 
 #else 
 
@@ -55,4 +59,5 @@ class ApexPerformanceTimer
 #define APEXPERFORMANCETIMER_REPORTALL_ATEXIT 
 
 #endif // ENABLE_SIMPLEPERF
+
 #endif // APEXPERFORMANCETIMER

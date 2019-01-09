@@ -17,31 +17,32 @@ class ApexPerformanceTimer
 {
  public:
 
-  duration<double> getStart() const{return t_start;}
-  duration<double> getStop() const{return t_stop;}
+  // returns a starting time point 
+  time_point<std::chrono::high_resolution_clock> getStart() const{return t_start;}
+
+  // returns a stopping time point 
+  time_point<std::chrono::high_resolution_clock> getStop() const{return t_stop;}
+
+  // gets elapsed time between two time_points 
   duration<double> getElapsed() const{return (t_stop - t_start);}
   
-  void setStart(duration<double> start) const{start = t_start;}
-  void setStop(duration<double> stop) const{stop = t_stop;}
+  void setStart(time_point<std::chrono::high_resolution_clock> start) {start = t_start;}
+  void setStop(time_point<std::chrono::high_resolution_clock> stop) {stop = t_stop;}
 
   ApexPerformanceTimer(const char* strText)
     {
-      //auto t_start = high_resolution_clock::now();
-
-      /* I need something here to set the start time */
-      duration<double> tmp = duration_cast<duration<double>>(high_resolution_clock::now())
-      setStart(tmp);
+      auto time = high_resolution_clock::now();
+      
+      setStart(time);
     }
-
+  
   ~ApexPerformanceTimer()
     {
-      //auto t_stop = high_resolution_clock::now();
-
+      auto time = high_resolution_clock::now();
+      
       /* I need something here to set the stop time */
-      setStop(high_resolution_clock::now());
-
-      //t_elapsed = duration_cast<duration<double>>(t_stop - t_start);
-
+      setStop(time);
+      
       /* I need something here to compute the elapsed time*/
       auto t_elapsed = getElapsed();
 
@@ -53,9 +54,9 @@ class ApexPerformanceTimer
 
  private:
   const char *m_str;
-  duration<double> t_start = high_resolution_clock::duration::zero();
+  time_point<std::chrono::high_resolution_clock> t_start;
+  time_point<std::chrono::high_resolution_clock> t_stop;
   duration<double> t_elapsed = high_resolution_clock::duration::zero();
-  duration<double> t_stop = high_resolution_clock::duration::zero();
 };
 
 #define APEXPERFORMANCETIMER_FUNCSTART ApexPerformanceTimer __xperfstart##__COUNTER__(__FUNCTION__" : %f\n")

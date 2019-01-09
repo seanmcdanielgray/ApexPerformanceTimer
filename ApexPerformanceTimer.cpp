@@ -6,8 +6,8 @@
 vector<tuple<string, duration<double>, int>> ApexPerformanceTimer::s_data;
 
 int ApexPerformanceTimer::s_indent = 0;
+duration<double> dummy_zero = high_resolution_clock::duration::zero();
 
-//duration<double> ApexPerformanceTimer::t_elapsed = high_resolution_clock::duration::zero();
 
 ApexPerformanceTimer::ApexPerformanceTimer(const char* strText, bool bShowImmediate) : m_str(strText), m_bShowImmediate(bShowImmediate)
 {
@@ -16,7 +16,10 @@ ApexPerformanceTimer::ApexPerformanceTimer(const char* strText, bool bShowImmedi
   if (!m_bShowImmediate)
     {
       m_id = s_data.size();
-      s_data.push_back(std::make_tuple(m_str, 0.0, s_indent));
+
+      // adds new element to the end of the vector 
+      s_data.push_back(std::make_tuple(m_str, dummy_zero, s_indent));
+
       s_indent++;
     }
 }
