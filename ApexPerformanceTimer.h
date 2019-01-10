@@ -3,6 +3,11 @@
 
 #define ENABLE_APEXPERFORMANCE
 
+// Immediate will print right after the elapsed time is obtained
+// may affect performance 
+// Retained collects data so that it can be shown at the end of the
+// program 
+// if show immediate is set to true will enter retained mode
 #define APEXPERFORMANCE_SHOWIMMEDIATE false
 
 #ifdef ENABLE_APEXPERFORMANCE
@@ -20,14 +25,17 @@ using namespace std;
 class ApexPerformanceTimer
 {
  public:
+  // Constructor for the performance timer 
   ApexPerformanceTimer(const char* strText, bool bShowImmediate);
+  // Destructor for the performance timer 
   ~ApexPerformanceTimer();
 
+  // Disallows copying cant have the same performance timer twice 
   ApexPerformanceTimer(const ApexPerformanceTimer&) = delete;
   ApexPerformanceTimer& operator=(const ApexPerformanceTimer&) = delete;
 
   static void ReportAll();
-
+  
  private:
   unsigned m_id;
   const char *m_str;
@@ -42,11 +50,17 @@ class ApexPerformanceTimer
   static int s_indent;
 };
 
-#define APEXPERFORMANCETIMER_FUNCSTART ApexPerformanceTimer __xperfstart##__COUNTER__(__FUNCTION__" : %f\n", APEXPERFORMANCE_SHOWIMMEDIATE)
-#define APEXPERFORMANCETIMER_SCOPED(str) ApexPerformanceTimer __xperfstart##__COUNTER__(str" : %f\n", APEXPERFORMANCE_SHOWIMMEDIATE)
-#define APEXPERFORMANCETIMER_START(str) { ApexPerformanceTimer __xperfstart##__COUNTER__(str" : %f\n", APEXPERFORMANCE_SHOWIMMEDIATE)
+// getting error here because xperf is a windows specific performance tool I have to find a way to replace this 
+// functionality with something that works on windows 
+// I need to understand what is happening here
+// Each one of these are calling the ApexPerformanceTimer() that is in the CPP file 
+#define APEXPERFORMANCETIMER_FUNCSTART ApexPerformanceTimer((std::string(__func__) +" : %f\n").c_str(), APEXPERFORMANCE_SHOWIMMEDIATE)
+#define APEXPERFORMANCETIMER_SCOPED(str) ApexPerformanceTimer ((std::string(str) +" : %f\n").c_str(), APEXPERFORMANCE_SHOWIMMEDIATE)
+#define APEXPERFORMANCETIMER_START(str) { ApexPerformanceTimer ((std::string(str) +" : %f\n").c_str(), APEXPERFORMANCE_SHOWIMMEDIATE)
 #define APEXPERFORMANCETIMER_END }
+// Show the current data from collected data
 #define APEXPERFORMANCETIMER_REPORTALL ApexPerformanceTimer::ReportAll
+// will show the data but after the main function is done 
 #define APEXPERFORMANCETIMER_REPORTALL_ATEXIT atexit(ApexPerformanceTimer::ReportAll);
 
 #else 

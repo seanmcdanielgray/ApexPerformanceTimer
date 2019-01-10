@@ -16,7 +16,6 @@ using namespace std::chrono;
 class ApexPerformanceTimer
 {
  public:
-
   // returns a starting time point 
   time_point<std::chrono::high_resolution_clock> getStart() const{return t_start;}
 
@@ -59,9 +58,9 @@ class ApexPerformanceTimer
   duration<double> t_elapsed = high_resolution_clock::duration::zero();
 };
 
-#define APEXPERFORMANCETIMER_FUNCSTART ApexPerformanceTimer __xperfstart##__COUNTER__(__FUNCTION__" : %f\n")
-#define APEXPERFORMANCETIMER_SCOPED(str) ApexPerformanceTimer __xperfstart##__COUNTER__(str" : %f\n")
-#define APEXPERFORMANCETIMER_START(str) { ApexPerformanceTimer __xperfstart##__COUNTER__(str" : %f\n")
+#define APEXPERFORMANCETIMER_FUNCSTART ApexPerformanceTimer (__FUNCTION__" : %f\n")
+#define APEXPERFORMANCETIMER_SCOPED(str) ApexPerformanceTimer (str" : %f\n")
+#define APEXPERFORMANCETIMER_START(str) { ApexPerformanceTimer (str" : %f\n")
 #define APEXPERFORMANCETIMER_END }
 
 #else
