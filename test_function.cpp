@@ -39,7 +39,7 @@ int main()
   APEXPERFORMANCETIMER_FUNCSTART;
 
   longFunction();
-  shortMethod();
+  //shortMethod();
 
   APEXPERFORMANCETIMER_REPORTALL_ATEXIT;
 

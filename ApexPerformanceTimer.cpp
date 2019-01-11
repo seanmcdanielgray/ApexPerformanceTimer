@@ -12,7 +12,7 @@
 #include "ApexPerformanceTimer.h"
 #include <tuple>
 
-#ifdef ENABLE_APEXPERFORMANCETIMER
+#ifdef ENABLE_APEXPERFORMANCE
 
 vector<tuple<string, duration<double>, int>> ApexPerformanceTimer::s_data;
 
