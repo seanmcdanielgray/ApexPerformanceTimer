@@ -9,6 +9,7 @@
  * in the analyzed placed 
  */
 
+#include <iostream>
 #include "ApexPerformanceTimer.h"
 #include <tuple>
 
@@ -42,7 +43,15 @@ ApexPerformanceTimer::~ApexPerformanceTimer()
 {
   // Takes the ending time of the timer 
   auto t_stop = high_resolution_clock::now();
+  /*
+  using Clock = std::chrono::high_resolution_clock;
 
+  constexpr auto num = Clock::period::num;
+  constexpr auto den = Clock::period::den;
+
+  std::cout << Clock::now().time_since_epoch().count()
+	    << " [" << num << '/' << den << "] units since epoch\n";
+  */
   // Computes the elapsed time using the start and end time 
   duration<double> t_elapsed = duration_cast<duration<double>>(t_stop - t_start);
 
@@ -69,7 +78,8 @@ void ApexPerformanceTimer::ReportAll()
       while (indents-- > 0) 
 	PERFORMANCE_PRINTF_FUNC("  ");
 
-      PERFORMANCE_PRINTF_FUNC(get<0>(d).c_str(), get<1>(d));
+      PERFORMANCE_PRINTF_FUNC(get<0>(d).c_str(), ((get<1>(d)).count()/1000000000));
+      //std::cout << (get<1>(d)).count()/1000000000 << std::endl;
     }
 }
 
