@@ -50,13 +50,16 @@ class ApexPerformanceTimer
   static int s_indent;
 };
 
-// getting error here because xperf is a windows specific performance tool I have to find a way to replace this 
-// functionality with something that works on windows 
-// I need to understand what is happening here
-// Each one of these are calling the ApexPerformanceTimer() that is in the CPP file 
-#define APEXPERFORMANCETIMER_FUNCSTART ApexPerformanceTimer((std::string(__func__) +" : %f\n").c_str(), APEXPERFORMANCE_SHOWIMMEDIATE)
-#define APEXPERFORMANCETIMER_SCOPED(str) ApexPerformanceTimer ((std::string(str) +" : %f\n").c_str(), APEXPERFORMANCE_SHOWIMMEDIATE)
-#define APEXPERFORMANCETIMER_START(str) { ApexPerformanceTimer ((std::string(str) +" : %f\n").c_str(), APEXPERFORMANCE_SHOWIMMEDIATE)
+// Concatenates Preprocessor to a counter macro to create a unique string 
+#define PP_CAT(a,b) PP_CAT_I(a,b)
+#define PP_CAT_I(a,b) PP_CAT_II(~, a ## b)
+#define PP_CAT_II(p, res) res
+#define UNIQUE_NAME(base) PP_CAT(base, __COUNTER__)
+
+
+#define APEXPERFORMANCETIMER_FUNCSTART ApexPerformanceTimer UNIQUE_NAME(__func__)((std::string(__func__) +" : %f\n").c_str(), APEXPERFORMANCE_SHOWIMMEDIATE)
+#define APEXPERFORMANCETIMER_SCOPED(str) ApexPerformanceTimer UNIQUE_NAME(__func__)((std::string(str) +" : %f\n").c_str(), APEXPERFORMANCE_SHOWIMMEDIATE)
+#define APEXPERFORMANCETIMER_START(str) { ApexPerformanceTimer UNIQUE_NAME(__func__)((std::string(str) +" : %f\n").c_str(), APEXPERFORMANCE_SHOWIMMEDIATE)
 #define APEXPERFORMANCETIMER_END }
 // Show the current data from collected data
 #define APEXPERFORMANCETIMER_REPORTALL ApexPerformanceTimer::ReportAll

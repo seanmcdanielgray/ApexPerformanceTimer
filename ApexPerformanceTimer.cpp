@@ -10,21 +10,23 @@
  */
 
 #include <iostream>
-#include "ApexPerformanceTimer.h"
 #include <tuple>
+#include <thread>
+#include "ApexPerformanceTimer.h"
 
 #ifdef ENABLE_APEXPERFORMANCE
 
 vector<tuple<string, duration<double>, int>> ApexPerformanceTimer::s_data;
 
 int ApexPerformanceTimer::s_indent = 0;
+
 duration<double> dummy_zero = high_resolution_clock::duration::zero();
 
 // The constructor adds a new entry into the static vector 
 ApexPerformanceTimer::ApexPerformanceTimer(const char* strText, bool bShowImmediate) : m_str(strText), m_bShowImmediate(bShowImmediate)
 {
   // Takes the start time when the timer is first constructor 
-  auto t_start = high_resolution_clock::now();
+  t_start = high_resolution_clock::now();
 
   // If showImmediate is false add data to the vector  
   if (!m_bShowImmediate)
@@ -41,19 +43,12 @@ ApexPerformanceTimer::ApexPerformanceTimer(const char* strText, bool bShowImmedi
 // The destructor 
 ApexPerformanceTimer::~ApexPerformanceTimer()
 {
+  
   // Takes the ending time of the timer 
-  auto t_stop = high_resolution_clock::now();
-  /*
-  using Clock = std::chrono::high_resolution_clock;
-
-  constexpr auto num = Clock::period::num;
-  constexpr auto den = Clock::period::den;
-
-  std::cout << Clock::now().time_since_epoch().count()
-	    << " [" << num << '/' << den << "] units since epoch\n";
-  */
+  t_stop = high_resolution_clock::now();
+  
   // Computes the elapsed time using the start and end time 
-  duration<double> t_elapsed = duration_cast<duration<double>>(t_stop - t_start);
+  t_elapsed = duration_cast<duration<double>>(t_stop - t_start);
 
   // If showImmediate is true will print out the data immediately 
   if (m_bShowImmediate)
@@ -78,8 +73,7 @@ void ApexPerformanceTimer::ReportAll()
       while (indents-- > 0) 
 	PERFORMANCE_PRINTF_FUNC("  ");
 
-      PERFORMANCE_PRINTF_FUNC(get<0>(d).c_str(), ((get<1>(d)).count()/1000000000));
-      //std::cout << (get<1>(d)).count()/1000000000 << std::endl;
+      PERFORMANCE_PRINTF_FUNC(get<0>(d).c_str(), ((get<1>(d)).count()));
     }
 }
 
